@@ -1,0 +1,54 @@
+---
+title: "Azure"
+author: "Venkata sai"
+date: "October 13, 2016"
+output: html_document
+---
+install.packages("devtools")
+devtools::install_github("RevolutionAnalytics/azureml")
+install.packages("AzureML")
+install.packages("XML")
+Rtools
+?AzureML
+```{r}
+
+Traffic_Violations <-read.csv("C:/Users/venkat/Downloads/Traffic_Violations.csv")
+Tfv_data1=na.omit(Traffic_Violations)
+Tfv_data1$Date<-strptime(Tfv_data1$Date.Of.Stop, format = '%m/%d/%Y')
+
+
+Tfv_data1$Belts<-as.numeric(ifelse(Tfv_data1$Belts=="No",0,1))
+Convert<-function(m)
+{
+m<-as.numeric(ifelse(m=="No",0,1))
+}
+
+Convert(Tfv_data1$Commercial.Vehicle)
+Convert(Tfv_data1$Belts)
+Convert(Tfv_data1$Accident)
+Convert(Tfv_data1$Personal.Injury)
+
+library(AzureML)
+library(devtools)
+
+model<-glm(Personal.Injury~ Belts,data = Tfv_data1,family =  "binomial")
+
+Pred<-function(new)
+{
+  predict(model,new,type = "response")
+}
+
+#Pred(Tfv_data1)
+
+wsid<-"96f565f75e664458866d3117c20fe2cd"
+wsauth<-"c67a930ece464fb0ab8ec27f68be66c5"
+
+ws<-workspace(wsid,wsauth)
+
+inputs<-as.data.frame(Tfv_data1[,10])
+names(inputs)<-c("Belts")
+
+accidentwebservice<-publishWebService(ws,fun = Pred,name = "Accident",inputSchema = inputs)
+
+
+```
