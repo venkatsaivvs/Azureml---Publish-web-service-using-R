@@ -11,3 +11,4 @@ Various things that one can do with AzureML package:
 3)	Publish the model as a web service.
 
 Our main focus is on how to publish a model as a web service. The ultimate aim of any model is to sell it and provide it as a service to the client. Once you train and test the model it should be delivered to the client either in the form of an application or as a web service.
+![web service](https://cloud.githubusercontent.com/assets/17242464/19524176/da8455d8-95ea-11e6-95fe-88823a123a0c.png)
